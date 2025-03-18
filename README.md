@@ -1,6 +1,6 @@
 ## Escrow Smart Contract (in Ink!)
 
-Escrow is a financial arrangement where a neutral third party holds funds/assets temporarily while two parties complete a transaction. It ensures:  
+Escrow is a financial arrangement where a neutral third party temporarily holds funds/assets while two parties complete a transaction. It ensures:  
 
 1. **Security**: Funds are protected until conditions are met.  
 2. **Trust**: Neither party can act unilaterally.  
