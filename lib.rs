@@ -369,6 +369,12 @@ mod escrow_smart_contract {
             }
             Ok(escrow)
         }
+
+        #[ink(message)]
+        pub fn get_escrow(&self, escrow_id: EscrowId) -> Option<Escrow> {
+            self.escrows.get(escrow_id)
+        }
+        
     }
 
     #[cfg(test)]
@@ -425,32 +431,32 @@ mod escrow_smart_contract {
         fn test_complete_escrow() {
             let accounts = ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
             let mut contract = EscrowSmartContract::new();
-            
+
             // Setup funded escrow
             let amount = 100;
             // Set caller as buyer (alice) before initiating
             ink::env::test::set_caller::<ink::env::DefaultEnvironment>(accounts.alice);
             let escrow_id = contract.initiate_escrow(accounts.bob, amount).unwrap();
-            
+
             // Deposit funds as buyer (still as alice)
             ink::env::test::set_value_transferred::<ink::env::DefaultEnvironment>(amount);
             contract.deposit_assets(escrow_id).unwrap();
-            
+
             // Make sure we're still the buyer (alice) for approval
             ink::env::test::set_caller::<ink::env::DefaultEnvironment>(accounts.alice);
             let result = contract.complete_escrow(escrow_id);
             assert!(result.is_ok());
-            
+
             let escrow = contract.escrows.get(escrow_id).unwrap();
             assert!(escrow.buyer_approved);
             assert!(!escrow.seller_approved);
             assert_eq!(escrow.state, EscrowState::Funded);
-            
+
             // Test seller approval (bob)
             ink::env::test::set_caller::<ink::env::DefaultEnvironment>(accounts.bob);
             let result = contract.complete_escrow(escrow_id);
             assert!(result.is_ok());
-            
+
             let escrow = contract.escrows.get(escrow_id).unwrap();
             assert!(escrow.buyer_approved);
             assert!(escrow.seller_approved);
