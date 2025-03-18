@@ -61,7 +61,7 @@ Escrow is a financial arrangement where a neutral third party temporarily holds 
 - Refund only if funds were deposited
 - Completed escrows cannot be canceled
 
-### States
+## States
 
 ```mermaid
 stateDiagram-v2
